@@ -9,11 +9,15 @@ import android.util.Log;
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import okhttp3.Headers;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String NOW_PLAYING_URL = "https://api.themoviedb.org/3/movie/550?api_key=6831d477c7c2460fbfa0d0f306539f23";
+    public static final String NOW_PLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?api_key=6831d477c7c2460fbfa0d0f306539f23";
     public static final String TAG = "MainActivity";
 
     @Override
@@ -27,7 +31,13 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.d(TAG, "onSuccess");
                 JSONObject jsonObject = json.jsonObject;
-                JSONArray results = jsonObject.getJSONArray("results");
+                try {
+                    JSONArray results = jsonObject.getJSONArray("results");
+                    Log.i(TAG, "Results" + results.toString());
+                } catch (JSONException e) {
+                    Log.e(TAG, "Hit json exception", e);
+                    e.printStackTrace();
+                }
             }
 
             @Override
