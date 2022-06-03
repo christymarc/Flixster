@@ -4,16 +4,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Parcel
 public class Movie {
+    Double voteAverage;
     String backdropPath;
     String posterPath;
     String title;
     String overview;
 
+    public Movie() {}
+
     public Movie(JSONObject jsonObject) throws JSONException {
+        voteAverage = jsonObject.getDouble("vote_average");
         backdropPath = jsonObject.getString("backdrop_path");
         posterPath = jsonObject.getString("poster_path");
         title = jsonObject.getString("title");
@@ -28,6 +35,9 @@ public class Movie {
         return movies;
     }
 
+    public Double getVoteAverage(){
+        return voteAverage;
+    }
     public String getBackdropPath(){
         return String.format("https://image.tmdb.org/t/p/w342/%s", backdropPath);
     }

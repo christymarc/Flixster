@@ -1,6 +1,7 @@
 package com.example.flixster.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,8 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.flixster.MovieDetailsActivity;
 import com.example.flixster.R;
 import com.example.flixster.models.Movie;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -53,7 +57,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         return movies.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView ivPoster;
         TextView tvTitle;
@@ -64,6 +68,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             ivPoster = itemView.findViewById(R.id.ivPoster);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvOverview = itemView.findViewById(R.id.tvOverview);
+            // itemView's OnClickListener
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Movie movie) {
@@ -78,9 +84,25 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
                 img_Url = movie.getPosterPath();
                 placeholder_Id = R.drawable.flicks_movie_placeholder;
             }
+            Glide.with(context).load(movie.getPosterPath()).placeholder(R.drawable.flicks_backdrop_placeholder).into(ivPoster);
             Glide.with(context).load(img_Url).placeholder(placeholder_Id).into(ivPoster);
             tvTitle.setText(movie.getTitle());
             tvOverview.setText(movie.getOverview());
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            // Check position is valid (exists in view)
+            if (position != RecyclerView.NO_POSITION){
+                Movie movie = movies.get(position);
+                // Create intent
+                Intent intent = new Intent(context, MovieDetailsActivity.class);
+                // Serialize the movie
+                intent.putExtra(Movie.class.getSimpleName(), Parcels.wrap(movie));
+                context.startActivity(intent);
+            }
+
         }
     }
 
